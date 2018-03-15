@@ -1,0 +1,133 @@
+#' Borda Count Method
+#' 
+#' Both ordinary Borda method and modified Borda method are 
+#' available. In an ordinary Borda system, voters are required to 
+#' assign score values to candidates. Suppose there are 5 
+#' candidates. A voter's 1st choice gets 1 point, the 2nd choice 
+#' gets 2 points... Candidate with the smallest total score wins. 
+#' The function does not require voters to assign scores to all 
+#' candidates, for NAs are automatically assigned the 
+#' highest (worst) score. Duplicated values  (two 
+#' or more candidates share 
+#' the same score) are also allowed (note: NAs and ties may 
+#' not be allowed in real ballots). In modified Borda, 
+#' the rule changes. Suppose there are 5 candidates. A voter 
+#' writes down 5 candidates and his 1st choice gets 5 points. 
+#' The one who gets the largest total score wins. However, 
+#' if the voter only write down 2 names, then, his 1st choice 
+#' gets only 2 points rather than 5 points. Thus the modified 
+#' Borda encourages voters to write down more names.
+#' Besides, in modified Borda, only the ranks of true scores, 
+#' rather than the true scores themselves, are used.
+#' If the raw data is a list each ballot of which 
+#' contains candidate names, scores can also be extracted, that 
+#' is, the 1st position is the 1st choice which gets 1 point, the 
+#' 2nd position, 2 points, and so on.
+#' 
+#' @param x an object of class \code{vote}.
+#' @param allow_dup whether ballots with duplicated score values 
+#' are taken into account. Default is TRUE.
+#' @param min_valid default is 1. If the number of valid entries of 
+#' a ballot is less than this value, the ballot will not be used.
+#' @param modified if the modified Borda is to be used. Default 
+#' is FALSE.
+#' 
+#' @return a list object.
+#' \itemize{
+#'   \item (1) \code{call} the function call.
+#'   \item (2) \code{method} the counting method.
+#'   \item (3) \code{candidate} candidate names.
+#'   \item (4) \code{candidate_num} number of candidate.
+#'   \item (5) \code{ballot_num} number of ballots in x.
+#'   \item (6) \code{valid_ballot_num} number of ballots that are 
+#' used to compute the result.
+#'   \item (7) \code{winner} the winners.
+#'   \item (8) \code{modified} whether the modified Borda is used.
+#'   \item (9) \code{other_info} a list with 2 elements, if \code{modified} 
+#' is FALSE, then \code{count_min} records the total 
+#' scores, \code{count_max} 
+#' is NULL; if \code{modified} is TRUE, the vice versa.
+#' }
+#' 
+#' @export
+#' @examples
+#' raw <- c(
+#' 	rep(c('m', 'n', 'c', 'k'), 42), 
+#' 	rep(c('n', 'c', 'k', 'm'), 26), 
+#' 	rep(c('c', 'k', 'n', 'm'), 15), 
+#' 	rep(c('k', 'c', 'n', 'm'), 17)
+#' ) 
+#' raw <- matrix(raw, ncol = 4, byrow = TRUE)
+#' vote <- create_vote(raw, xtype = 2, candidate = c('m', 'n', 'c', 'k'))
+#' y <- borda_method(vote)
+#' 
+#' raw <- list(c('a', 'e', 'c', 'd', 'b'), c('b', 'a', 'e'), 
+#' 	c('c', 'd', 'b'), c('d', 'a', 'e')
+#' )
+#' vote <- create_vote(raw, xtype = 3, candidate = c('a', 'b', 'c', 'd', 'e'))
+#' y <- borda_method(vote, modified = TRUE)
+borda_method <-
+function(x, allow_dup = TRUE, min_valid = 1, modified = FALSE) {
+    method <- "borda"
+    if (!class(x)[1] == "vote") 
+        stop("x must be a vote object.")
+    if (min_valid < 1) 
+        stop("Minimux number of min_valid is 1.")
+    stopifnot(allow_dup %in% c(TRUE, FALSE))
+    stopifnot(modified %in% c(TRUE, FALSE))
+    candidate <- x$candidate
+    NBALLOT <- x$ballot_num
+    candidate_num <- x$candidate_num
+    
+    if (modified == TRUE & allow_dup == TRUE) {
+        allow_dup <- FALSE
+        message("When modified is TRUE, allow_dup is automatically set to FALSE, ignoring value given by user.")
+    }
+    should_del <- c()
+    if (allow_dup == FALSE & length(x$row_with_dup) != 0) 
+        should_del <- append(should_del, x$row_with_dup)
+    if (length(x$row_with_na) > 0) {
+        get_na_ok <- which(x$num_non_na < min_valid)
+        if (length(get_na_ok) > 0) 
+            should_del <- append(should_del, x$row_with_na[get_na_ok])
+    }
+    should_del <- unique(should_del)
+    length_should_del <- length(should_del)
+    VALID_BALLOT_NUM <- NBALLOT - length_should_del
+    if (VALID_BALLOT_NUM == 0) 
+        stop("No ballot is OK.")
+    x <- if (length_should_del > 0) 
+        x$ballot[-should_del, ] else x$ballot
+    
+    message("SELECTING")
+    if (modified == FALSE) {
+        x[is.na(x)] <- candidate_num
+        B <- colSums(x)  # min, better
+        winner <- which(B == min(B))
+    }
+    
+    if (modified == TRUE) {
+        maxplus <- candidate_num + 1
+        for (i in 1:nrow(x)) {
+            ii <- maxplus - x[i, ]
+            x[i, ] <- data.table::frank(ii, na.last = "keep")
+        }
+        B <- colSums(x, na.rm = TRUE)
+        winner <- which(B == max(B))
+    }
+    
+    winner <- candidate[winner]
+    
+    message("COLLECTING RESULT")
+    over <- list(call = match.call(), method = method, candidate = candidate, candidate_num = candidate_num, ballot_num = NBALLOT, valid_ballot_num = VALID_BALLOT_NUM, 
+        winner = winner, modified = modified, other_info = list(count_min = NULL, count_max = NULL))
+    if (modified == FALSE) {
+        over$other_info$count_min <- B
+        message("Winner is with the lowest score, for modified is FALSE.")
+    } else {
+        over$other_info$count_max <- B
+        message("Winner is with the largest score, for modified is TRUE.")
+    }
+    message("DONE")
+    return(over)
+}
