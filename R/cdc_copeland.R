@@ -52,12 +52,19 @@
 #'   \item (13) \code{other_info} a list with 2 elements, the 1st is the point
 #' the loser gets, it is equal to \code{lose}. The 2nd contains the scores.
 #' }
-#' 
+#'
+#' @references
+#' \itemize{
+#'   \item Merlin, V. & Saari, D. 1996. The Copeland 
+#' method: I.: Relationships and the dictionary. 
+#' Economic Theory, 8(1), 51-76.
+#' }
+#'
 #' @export
 #' @examples
 #' raw <- c(
-#' 	rep(c('m', 'n', 'c', 'k'), 42), rep(c('n', 'c', 'k', 'm'), 26), 
-#' 	rep(c('c', 'k', 'n', 'm'), 15), rep(c('k', 'c', 'n', 'm'), 17)
+#'     rep(c('m', 'n', 'c', 'k'), 42), rep(c('n', 'c', 'k', 'm'), 26), 
+#'     rep(c('c', 'k', 'n', 'm'), 15), rep(c('k', 'c', 'n', 'm'), 17)
 #' ) 
 #' raw <- matrix(raw, ncol = 4, byrow = TRUE)
 #' vote <- create_vote(raw, xtype = 2, candidate = c('m', 'n', 'k', 'c'))
@@ -67,7 +74,7 @@
 #' win3 <- cdc_copeland(win2, lose = 0)
 cdc_copeland <-
 function(x, allow_dup = TRUE, min_valid = 1, lose = -1) {
-    method <- "copeland1"
+    method <- "copeland"
     if (!class(x)[1] %in% c("vote", "matrix", "condorcet")) 
         stop("x must be a vote, condorcet or matrix object.")
     if (min_valid < 1) 

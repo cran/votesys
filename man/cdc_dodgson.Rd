@@ -63,35 +63,31 @@ are Tideman score method and Dodgson Quick method.
 See Details.
 }
 \details{
-Suppose the candidate are A, B, C and D. If A wins B in pairwise 
+Suppose the candidates are A, B, C and D. If A wins B in pairwise 
 comparison or has equal votes with B, then add 0 to A. If C wins A, 
-then add to A the number of votes he has to rob from C to win C. 
+then add to A adv(C, A), that is, the number of voters that prefer 
+C than A, minus the number of voters that prefer A than A.  
 Again, if D wins A, then add to A that number. Then, we sum up 
 the points belong to A. We do the same thing to B, C and D. The one 
 gets the least points is the winner. This is what we do in Tideman
 score method. In Dodgson Quick method, we first compute the number 
-of votes one has to rob, then divide it by 2 and get the ceiling, and sum 
+of votes, then divide it by 2 and get the ceiling, and sum 
 all of them up.
-
-Suppose in pairwise comparison C has 20 votes and A has 15 votes. 
-If A wants to win C, he has to rob at least 3 votes from C.
-So the Tideman score A gets is 3. However, the Dodgson Quick 
-score is \code{ceiling(3 / 2)} = 2.
 }
 \examples{
 raw <- list2ballot(
     x = list(
-		c('A', 'B', 'C', 'D', 'E', 'F'), 
-		c('F', 'A', 'B', 'C', 'D', 'E'),
-		c('E', 'D', 'C', 'B', 'F', 'A'),
-		c('B', 'A', 'C', 'D', 'E', 'F'),
-		c('F', 'E', 'D', 'C', 'B', 'A'),
-		c('F', 'B', 'A', 'C', 'D', 'E'),
-		c('E', 'D', 'C', 'A', 'F', 'B'),
-		c('E', 'B', 'A', 'C', 'D', 'F'),
-		c('F', 'D', 'C', 'A', 'E', 'B'),
-		c('D', 'B', 'A', 'C', 'E', 'F'),
-		c('F', 'E', 'C', 'A', 'D', 'B')
+        c('A', 'B', 'C', 'D', 'E', 'F'), 
+        c('F', 'A', 'B', 'C', 'D', 'E'),
+        c('E', 'D', 'C', 'B', 'F', 'A'),
+        c('B', 'A', 'C', 'D', 'E', 'F'),
+        c('F', 'E', 'D', 'C', 'B', 'A'),
+        c('F', 'B', 'A', 'C', 'D', 'E'),
+        c('E', 'D', 'C', 'A', 'F', 'B'),
+        c('E', 'B', 'A', 'C', 'D', 'F'),
+        c('F', 'D', 'C', 'A', 'E', 'B'),
+        c('D', 'B', 'A', 'C', 'E', 'F'),
+        c('F', 'E', 'C', 'A', 'D', 'B')
     ), 
     n = c(19, 12, 12, 9, 9, 10, 10 , 10 , 10, 10, 10)
 )
@@ -101,4 +97,9 @@ win2 <- cdc_dodgson(vote, dq_t = "dq") # A
 win2 <- cdc_dodgson(win1, dq_t = "dq") # A
 win3 <- cdc_dodgson(vote, dq_t = "t") # B
 win3 <- cdc_dodgson(win2, dq_t = "t") # B
+}
+\references{
+\itemize{
+  \item McCabe-Dansted, J. & Slinko, A. 2008. Approximability of Dodgson's Rule. Social Choice and Welfare, Feb, 1-26.
+}
 }

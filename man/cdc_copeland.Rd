@@ -67,8 +67,8 @@ rather than -1 point.
 }
 \examples{
 raw <- c(
-	rep(c('m', 'n', 'c', 'k'), 42), rep(c('n', 'c', 'k', 'm'), 26), 
-	rep(c('c', 'k', 'n', 'm'), 15), rep(c('k', 'c', 'n', 'm'), 17)
+    rep(c('m', 'n', 'c', 'k'), 42), rep(c('n', 'c', 'k', 'm'), 26), 
+    rep(c('c', 'k', 'n', 'm'), 15), rep(c('k', 'c', 'n', 'm'), 17)
 ) 
 raw <- matrix(raw, ncol = 4, byrow = TRUE)
 vote <- create_vote(raw, xtype = 2, candidate = c('m', 'n', 'k', 'c'))
@@ -76,4 +76,11 @@ win1 <- cdc_simple(vote)
 win2 <- cdc_copeland(vote) # winner is n
 win2 <- cdc_copeland(win1$cdc)
 win3 <- cdc_copeland(win2, lose = 0)
+}
+\references{
+\itemize{
+  \item Merlin, V. & Saari, D. 1996. The Copeland 
+method: I.: Relationships and the dictionary. 
+Economic Theory, 8(1), 51-76.
+}
 }

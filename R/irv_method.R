@@ -40,6 +40,13 @@
 #' the summary information of each round is recorded. The length of the list is 
 #' equal to the number of rounds.
 #' }
+#'
+#' @references
+#' \itemize{
+#'   \item Reilly, B. 2004. The global spread of preferential 
+#' voting: Australian institutional imperialism? 
+#' Australian Journal of Political Science, 39(2), 253-266.
+#' }
 #' 
 #' @export
 #' @examples

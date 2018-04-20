@@ -60,3 +60,10 @@ raw <- matrix(raw, ncol = 4, byrow = TRUE)
 vote <- create_vote(raw, xtype = 2, candidate = c('m', 'n', 'k', 'c'))
 y <- irv_method(vote) # winner is k
 }
+\references{
+\itemize{
+  \item Reilly, B. 2004. The global spread of preferential 
+voting: Australian institutional imperialism? 
+Australian Journal of Political Science, 39(2), 253-266.
+}
+}

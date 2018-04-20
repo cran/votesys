@@ -2,19 +2,27 @@
 % Please edit documentation in R/list2ballot.R
 \name{list2ballot}
 \alias{list2ballot}
-\title{Repeat ith element of list x for j times to form a larger list}
+\title{Repeat ith element of list x or row of matrix/data.frames 
+for j times}
 \usage{
-list2ballot(x, n = rep(1, length(x)), string = NULL)
+list2ballot(x = NULL, n = rep(1, length(x)), m = NULL, string = NULL)
 }
 \arguments{
-\item{x}{a list, each element of which should be a vector.}
+\item{x}{a list, each element of which should be a vector. Note: 
+only one of \code{x}, \code{m} and \code{string} 
+can be a non-NULL object}
 
-\item{n}{how many times each element of x should be replicated.
+\item{n}{how many times each element of \code{x} 
+or each row of \code{m} should be replicated.
 It should be a numeric vector of non-negative integers and the 
-length of it should be equal to that of \code{x}. 
+length of it should be equal to that of \code{x} or the row number 
+of \code{m}. 
 The default is 1 for each element of \code{x}.}
 
-\item{string}{default is NULL. If it is not NULL,  \code{x} 
+\item{m}{a matrix or dataframe, the number of rows should be 
+equal to the length of n.}
+
+\item{string}{default is NULL. If it is not NULL,  \code{x}, \code{m} 
 and \code{n} are ignored. It should be a character vector. Each 
 one contains two parts, the 1st is the amount of 
 that ballot, and the 2nd part contains the names. The 1st and 
@@ -24,7 +32,9 @@ inside the names ("_" is not taken to be
 a punctuation). See examples.}
 }
 \value{
-a list with replicated vectors.
+a list with replicated vectors, if \code{x} is not NULL, 
+or a matrix/data.frame with duplicated rows, if 
+\code{m} is not NULL.
 }
 \description{
 Suppose you have 3 different unique ballots and the amount 
@@ -34,8 +44,9 @@ for usage.
 }
 \examples{
 # Use x and n
-unique_ballot <- list(c("A", "B", "C"), c("F", "A", "B"),
-		c("E", "D", "C", "B", "F", "A"), c("x","x", "A")
+unique_ballot <- list(
+    c("A", "B", "C"), c("F", "A", "B"),
+    c("E", "D", "C", "B", "F", "A"), c("x","x", "A")
 )
 r <- c(1, 2, 3, 0)
 y <- list2ballot(unique_ballot, r)
@@ -50,4 +61,9 @@ unique_ballot <- c(
 	"0 Smith   Jane", "  1 Mike???!!!"
 )
 y <- list2ballot(string = unique_ballot)
+# Use a matrix.
+m <- matrix(c(1, 2, 3, 3, 1, 2), nrow = 2, byrow = TRUE)
+colnames(m) <- c("p1", "p2", "p3")
+r <- c(3, 5)
+y <- list2ballot(m = m, n = r)
 }

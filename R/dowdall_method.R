@@ -28,11 +28,16 @@
 #'   \item (7) \code{winner} the winners.
 #'   \item (8) \code{other_info} total scores.
 #' }
-#' 
+#'
+#' @references
+#' \itemize{
+#'   \item https://en.wikipedia.org/wiki/Borda_count
+#' }
+#'
 #' @export
 #' @examples
 #' raw <- list2ballot(string = 
-#' 	c("51: a>c>b>d", "5: c>b>d>a", "23: b>c>d>a", "21: d>c>b>a")
+#'     c("51: a>c>b>d", "5: c>b>d>a", "23: b>c>d>a", "21: d>c>b>a")
 #' )
 #' vote <- create_vote(raw, xtype = 3, candidate = c("a", "b", "c", "d"))
 #' y1 <- borda_method(vote) # winner is c

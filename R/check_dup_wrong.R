@@ -62,15 +62,15 @@
 #' @export
 #' @examples
 #' raw=list(
-#' 	c('a', 'e', 'c', 'd', 'b'), 
-#' 	c('b', 'a', 'e'), 
-#' 	c('c', 'd', 'b'), 
-#' 	c('d', 'a', 'b'), 
-#' 	c('a', 'a', 'b', 'b', 'b'), 
-#' 	c(NA, NA, NA, NA), 
-#' 	v7=NULL, 
-#' 	v8=c('a', NA, NA, NA, NA, NA, NA), 
-#' 	v9=rep(" ", 3)
+#'     c('a', 'e', 'c', 'd', 'b'), 
+#'     c('b', 'a', 'e'), 
+#'     c('c', 'd', 'b'), 
+#'     c('d', 'a', 'b'), 
+#'     c('a', 'a', 'b', 'b', 'b'), 
+#'     c(NA, NA, NA, NA), 
+#'     v7=NULL, 
+#'     v8=c('a', NA, NA, NA, NA, NA, NA), 
+#'     v9=rep(" ", 3)
 #' )
 #' y=check_dup_wrong(raw, xtype=3, candidate=letters[1: 5])
 #' y=check_dup_wrong(raw, xtype=3, candidate=letters[1: 4]) 

@@ -39,7 +39,10 @@ is NULL; if \code{modified} is TRUE, the vice versa.
 \description{
 Both ordinary Borda method and modified Borda method are 
 available. In an ordinary Borda system, voters are required to 
-assign score values to candidates. Suppose there are 5 
+assign score values to candidates. See Details.
+}
+\details{
+Suppose there are 5 
 candidates. A voter's 1st choice gets 1 point, the 2nd choice 
 gets 2 points... Candidate with the smallest total score wins. 
 The function does not require voters to assign scores to all 
@@ -47,7 +50,9 @@ candidates, for NAs are automatically assigned the
 highest (worst) score. Duplicated values  (two 
 or more candidates share 
 the same score) are also allowed (note: NAs and ties may 
-not be allowed in real ballots). In modified Borda, 
+not be allowed in real ballots).
+
+In modified Borda, 
 the rule changes. Suppose there are 5 candidates. A voter 
 writes down 5 candidates and his 1st choice gets 5 points. 
 The one who gets the largest total score wins. However, 
@@ -63,17 +68,17 @@ is, the 1st position is the 1st choice which gets 1 point, the
 }
 \examples{
 raw <- c(
-	rep(c('m', 'n', 'c', 'k'), 42), 
-	rep(c('n', 'c', 'k', 'm'), 26), 
-	rep(c('c', 'k', 'n', 'm'), 15), 
-	rep(c('k', 'c', 'n', 'm'), 17)
+    rep(c('m', 'n', 'c', 'k'), 42), 
+    rep(c('n', 'c', 'k', 'm'), 26), 
+    rep(c('c', 'k', 'n', 'm'), 15), 
+    rep(c('k', 'c', 'n', 'm'), 17)
 ) 
 raw <- matrix(raw, ncol = 4, byrow = TRUE)
 vote <- create_vote(raw, xtype = 2, candidate = c('m', 'n', 'c', 'k'))
 y <- borda_method(vote)
 
 raw <- list(c('a', 'e', 'c', 'd', 'b'), c('b', 'a', 'e'), 
-	c('c', 'd', 'b'), c('d', 'a', 'e')
+    c('c', 'd', 'b'), c('d', 'a', 'e')
 )
 vote <- create_vote(raw, xtype = 3, candidate = c('a', 'b', 'c', 'd', 'e'))
 y <- borda_method(vote, modified = TRUE)

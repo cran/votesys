@@ -1,6 +1,17 @@
                    votesys NEWS and CHANGELOG
 =========================================================
 
+
+## 0.1.1 (2018-04-20)
+
+* [NEW FEATURE] #1: Add function cdc_kemenyyoung for Kemeny-Young method.
+
+* [NEW FEATURE] #2: Add function star_rating to deal with data similar to 5-star ratings.
+
+* [NEW FEATURE] #3: Add function as_complete to convert partial ratings/rankings to full ones.
+
+-------------------------------------------------------------------------------
+
 ## 0.1.0 (2018-03-17)
 
 * First Release: Version 0.1.0

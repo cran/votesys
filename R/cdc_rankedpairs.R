@@ -68,28 +68,20 @@
 #' The 3rd is the lock-in result; if the method fails, 
 #' it will be NULL.
 #' }
-#' 
+#'
+#' @references
+#' \itemize{
+#'   \item Tideman, T. 1987. Independence of clones as a 
+#' criterion for voting rules. Social Choice and Welfare, 4(3), 185-206.
+#' }
+#'
 #' @export
 #' @examples
-#' raw <- c(
-#' 	"98:Abby>Cora>Erin>Dave>Brad",
-#' 	"64:Brad>Abby>Erin>Cora>Dave",
-#' 	"12:Brad>Abby>Erin>Dave>Cora", 
-#' 	"98:Brad>Erin>Abby>Cora>Dave", 
-#' 	"13:Brad>Erin>Abby>Dave>Cora", 
-#' 	"125:Brad>Erin>Dave>Abby>Cora", 
-#' 	"124:Cora>Abby>Erin>Dave>Brad", 
-#' 	"76:Cora>Erin>Abby>Dave>Brad", 
-#' 	"21:Dave>Abby>Brad>Erin>Cora", 
-#' 	"30:Dave>Brad>Abby>Erin>Cora", 
-#' 	"98:Dave>Brad>Erin>Cora>Abby", 
-#' 	"139:Dave>Cora>Abby>Brad>Erin", 
-#' 	"23:Dave>Cora>Brad>Abby>Erin"
-#' ) 
-#' raw <- list2ballot(string = raw)
-#' vote <- create_vote(raw, xtype = 3, candidate = c('Dave', 'Cora', 'Brad', 'Erin', 'Abby'))
-#' win1 <- cdc_simple(vote) # no winner
-#' win2 <- cdc_rankedpairs(vote) # winner is Brad
+#' raw <- rbind(c('m', 'n', 'c', 'k'), c('n', 'c', 'k', 'm'), 
+#'     c('c', 'k', 'n', 'm'), c('k', 'c', 'n', 'm')) 
+#' raw <- list2ballot(m = raw, n = c(42, 26, 15, 17))
+#' vote <- create_vote(raw, xtype = 2, candidate = c('m', 'n', 'c', 'k'))
+#' y <- cdc_rankedpairs(vote)
 cdc_rankedpairs <-
 function(x, allow_dup = TRUE, min_valid = 1) {
     method <- "rankedpairs"

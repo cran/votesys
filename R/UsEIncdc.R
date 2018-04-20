@@ -236,6 +236,7 @@ function(x, zeroone) {
                 need_name <- subi[, 2]
                 need_m <- zeroone[need_name, need_name]
                 need_score <- rowSums(need_m)
+				if (length(need_score) != length(unique(need_score))) TIE_SOLVE <- FALSE
                 o_need <- order(need_score)
                 subi <- subi[o_need, ]
                 for (j in 1:nrow(subi)) DF[nrow(DF) + 1, ] <- subi[j, ]
@@ -244,6 +245,7 @@ function(x, zeroone) {
                 need_name <- subi[, 1]
                 need_m <- zeroone[need_name, need_name]
                 need_score <- rowSums(need_m)
+				if (length(need_score) != length(unique(need_score))) TIE_SOLVE <- FALSE				
                 o_need <- order(need_score, decreasing = TRUE)
                 subi <- subi[o_need, ]
                 for (j in 1:nrow(subi)) DF[nrow(DF) + 1, ] <- subi[j, ]
@@ -290,4 +292,48 @@ function(x) {
         }
     }
     y
+}
+
+#' @import gtools
+AlllInkstrEngth=function(x, candname, keep=FALSE){
+	nx=nrow(x)
+	
+	# expand.grid is too slow and memory-costing
+    #	allcombi=expand.grid(rep(list(1: nx), nx))
+    #	checkinvalid=apply(allcombi, 1, FUN=function(x) if (anyDuplicated(x) != 0) FALSE else TRUE)
+    #	allcombi=allcombi[checkinvalid, ]
+    #	rownames(allcombi)=NULL
+    #	rm(checkinvalid)
+	
+	allcombi=gtools::permutations(nx, nx)
+	
+	dUAlsUm=function(i1, i2, datam) `[`(datam, i1, i2)
+	SCORE <- rep(0, nrow(allcombi))
+	for (i in 1: (nx-1)){
+		for (j in 2: nx){
+			if (i < j){
+				SCORE=SCORE+mapply(FUN=dUAlsUm, allcombi[, i], allcombi[, j], MoreArgs=list(datam=x), SIMPLIFY=TRUE)
+			}
+		}
+	}
+	
+	whichlink=which(SCORE == max(SCORE))
+	linkv=SCORE[whichlink]
+	WINLINK=list()
+	for (r in whichlink){
+		rr=as.numeric(allcombi[r, ])
+		WINLINK[[length(WINLINK)+1]]=candname[rr]
+	}
+	truewinner=unique(unlist(lapply(WINLINK, `[`, 1)))
+	WINLINK=do.call(rbind, WINLINK) # must after truewinner
+	
+	if (keep==FALSE){
+		res=list(truewinner, WINLINK, linkv)
+	} else {
+		RANKLINK=cbind(allcombi, SCORE)[order(SCORE, decreasing=TRUE), ]
+		colnames(RANKLINK)=c(1: (ncol(RANKLINK)-1), "score")
+		rownames(RANKLINK)=NULL
+		res=list(truewinner, WINLINK, linkv, RANKLINK)
+	}
+	res
 }
